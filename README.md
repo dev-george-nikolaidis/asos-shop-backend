@@ -1,6 +1,4 @@
-# Express API Starter with Typescript
-
-How to use this template:
+# Express API with Typescript
 
 Includes API Server utilities:
 

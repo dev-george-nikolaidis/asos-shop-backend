@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
 // @desc    get  user
-// @route   GET /api/v1/users
+// @route   GET /api/v1/users/login
 // @access  public
 export async function loginUser(req: Request<{}, never, loginUserPayload>, res: Response, next: NextFunction) {
 	const { email, password } = req.body;
@@ -29,7 +29,7 @@ export async function loginUser(req: Request<{}, never, loginUserPayload>, res: 
 }
 
 // @desc    create  user
-// @route   POST /api/v1/users
+// @route   POST /api/v1/users/register
 // @access  Private
 export async function registerUser(req: Request<{}, never, registerUserPayload>, res: Response, next: NextFunction) {
 	const { name, email, password } = req.body;
@@ -57,8 +57,9 @@ export async function registerUser(req: Request<{}, never, registerUserPayload>,
 
 // Generate JWT
 const generateToken = (id: any) => {
-	const jwtSecret = process.env.JWT_SECRET || "dsadsa";
+	const jwtSecret = process.env.JWT_SECRET as string;
+	const jwtExpTime = process.env.JWT_TOKEN_EXPIRATION || 1;
 	return jwt.sign({ id }, jwtSecret, {
-		expiresIn: "30d",
+		expiresIn: `${jwtExpTime}d`,
 	});
 };
