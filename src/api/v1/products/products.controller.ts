@@ -1,25 +1,34 @@
 import axios from "axios";
 import { NextFunction, Request, Response } from "express";
-import { json } from "node:stream/consumers";
 
 // @desc    get  user
-// @route   GET /api/v1/products/:category
+// @route   GET /api/v1/products/:categoryId
 // @access  public
-export async function getProductsByCategory(req: Request<{ category: string }, never>, res: Response, next: NextFunction) {
+
+export async function getProductsByCategory(req: Request<{ categoryId: string; limit?: string }, never>, res: Response, next: NextFunction) {
+	const { categoryId, limit } = req.params;
+
+	const options = {
+		method: "GET",
+		url: "https://asos2.p.rapidapi.com/products/v2/list",
+		params: {
+			categoryId: categoryId,
+			limit: limit ? limit : "60",
+			country: "US",
+			sort: "freshness",
+			currency: "USD",
+			sizeSchema: "US",
+			lang: "en-US",
+		},
+		headers: {
+			"X-RapidAPI-Key": process.env.ASOS_API_KEY,
+			"X-RapidAPI-Host": process.env.ASOS_API_URL,
+		},
+	};
+
 	try {
-		axios
-			.get("https://www.asos.com/men/jewellery/cat/?cid=5034", {
-				method: "GET",
-				headers: {},
-			})
-			.then((data: any) => {
-				// console.log(data.data);
-				// res.json({ d: data });
-				res.send(data.data);
-			})
-			.catch(function (error) {
-				console.error(error);
-			});
+		const response = await axios(options);
+		res.send(response.data);
 	} catch (error) {
 		next(error);
 	}

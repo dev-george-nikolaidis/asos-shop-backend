@@ -9,10 +9,11 @@ const router = Router();
 // router.get("/", protectedRoute, (req: Request, res: Response) => {
 // 	res.send("Get products");
 // });
-router.get("/:category", (req: Request, res: Response) => {
+
+router.get("/", (req: Request, res: Response) => {
 	res.send("Get products");
 });
 
-router.get("/", productController.getProductsByCategory);
+router.get("/:categoryId", productController.getProductsByCategory);
 
 export default router;
